@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Entity(name = "Topico")
@@ -34,11 +35,10 @@ public class Topico {
     private String autor;
 
     @Column(name = "curso")
-
     private String curso;
 
-    @Column(name = "respostas")
-    private String respostas;
+    @OneToMany(mappedBy = "topico")
+    private List<Resposta> respostas;
 
     public Topico() {
     }
