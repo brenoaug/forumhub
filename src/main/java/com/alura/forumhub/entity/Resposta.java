@@ -23,7 +23,6 @@ public class Resposta {
 
     @ManyToOne
     @JoinColumn(name = "topico_id", nullable = false)
-    @NotNull
     private Topico topico;
 
     @Column(name = "data_criacao")

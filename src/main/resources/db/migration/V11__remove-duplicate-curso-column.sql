@@ -1,0 +1,6 @@
+ALTER TABLE topicos
+    DROP FOREIGN KEY FK_TOPICOS_ON_CURSOJgWzuP;
+
+ALTER TABLE topicos
+    DROP COLUMN curso;
+

@@ -6,18 +6,21 @@ import jakarta.validation.constraints.NotNull;
 import java.util.List;
 import java.util.UUID;
 
-@Entity(name = "Perfil")
-@Table(name = "perfis")
-public class Perfil {
+@Entity(name = "Curso")
+@Table(name = "cursos")
+public class Curso {
     @Id
-    @Column(name = "perfil_id")
+    @Column(name = "curso_id")
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
-
-    @ManyToMany(mappedBy = "perfis")
-    private List<Usuario> usuarios;
 
     @Column(name = "nome")
     @NotNull
     private String nome;
+
+    @Column(name = "categoria")
+    private String categoria;
+
+    @OneToMany(mappedBy = "curso")
+    private List<Topico> topicos;
 }

@@ -35,8 +35,9 @@ public class Topico {
     @JoinColumn(name = "usuario_id", nullable = false)
     private Usuario autor;
 
-    @Column(name = "curso")
-    private String curso;
+    @ManyToOne
+    @JoinColumn(name = "curso_id", nullable = false)
+    private Curso curso;
 
     @OneToMany(mappedBy = "topico")
     private List<Resposta> respostas;

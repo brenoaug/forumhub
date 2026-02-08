@@ -1,0 +1,2 @@
+ALTER TABLE topicos
+    MODIFY curso_id BINARY(16) NOT NULL;

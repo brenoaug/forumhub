@@ -1,0 +1,5 @@
+ALTER TABLE topicos
+    ADD curso BINARY(16) NULL;
+
+ALTER TABLE topicos
+    ADD CONSTRAINT FK_TOPICOS_ON_CURSOJgWzuP FOREIGN KEY (curso) REFERENCES cursos (curso_id);
