@@ -2,7 +2,6 @@ package com.alura.forumhub.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import org.hibernate.annotations.Collate;
 
 import java.util.List;
 import java.util.UUID;
@@ -28,8 +27,12 @@ public class Usuario {
     @NotNull
     private String senha;
 
-    @Column(name = "perfis")
-    private String perfis;
+    @ManyToMany
+    @JoinTable(
+            name = "usuarios_perfis",
+            joinColumns = @JoinColumn(name = "usuario_id"),
+            inverseJoinColumns = @JoinColumn(name = "perfil_id"))
+    private List<Perfil> perfis;
 
     @OneToMany(mappedBy = "autor")
     private List<Topico> topicos;
