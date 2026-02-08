@@ -29,8 +29,9 @@ public class Resposta {
     @Column(name = "data_criacao")
     private LocalDateTime dataCriacao = LocalDateTime.now();
 
-    @Column(name = "autor")
-    private String autor;
+    @ManyToOne
+    @JoinColumn(name = "usuario_id", nullable = false)
+    private Usuario autor;
 
     @Column(name = "solucao")
     @Enumerated(EnumType.STRING)

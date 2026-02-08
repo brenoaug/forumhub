@@ -31,8 +31,9 @@ public class Topico {
     @Enumerated(EnumType.STRING)
     private StatusTopico status = StatusTopico.ABERTO;
 
-    @Column(name = "autor")
-    private String autor;
+    @ManyToOne
+    @JoinColumn(name = "usuario_id", nullable = false)
+    private Usuario autor;
 
     @Column(name = "curso")
     private String curso;
