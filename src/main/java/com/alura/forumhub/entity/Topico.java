@@ -1,8 +1,7 @@
 package com.alura.forumhub.entity;
 
+import com.alura.forumhub.dto.DadosCriacaoTopico;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -16,26 +15,59 @@ public class Topico {
     private UUID id;
 
     @Column(name = "titulo")
-    @NotBlank
     private String titulo;
 
     @Column(name = "mensagem")
-    @NotBlank
     private String mensagem;
 
     @Column(name = "data_criacao")
-    @NotNull
-    private LocalDateTime dataCriacao = LocalDateTime.now();
+    private final LocalDateTime dataCriacao = LocalDateTime.now();
 
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
-    @NotNull
     private StatusTopico status = StatusTopico.ABERTO;
 
     @Column(name = "autor")
-    @NotBlank
     private String autor;
 
     @Column(name = "curso")
     private String curso;
+
+    public Topico(DadosCriacaoTopico dadosCriacaoTopico) {
+        this.titulo = dadosCriacaoTopico.titulo();
+        this.mensagem = dadosCriacaoTopico.mensagem();
+        this.autor = dadosCriacaoTopico.autor();
+        this.curso = dadosCriacaoTopico.curso();
+    }
+
+    public Topico() {
+    }
+
+    public UUID getId() {
+        return id;
+    }
+
+    public String getTitulo() {
+        return titulo;
+    }
+
+    public String getMensagem() {
+        return mensagem;
+    }
+
+    public LocalDateTime getDataCriacao() {
+        return dataCriacao;
+    }
+
+    public StatusTopico getStatus() {
+        return status;
+    }
+
+    public String getAutor() {
+        return autor;
+    }
+
+    public String getCurso() {
+        return curso;
+    }
 }
