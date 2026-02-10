@@ -3,6 +3,8 @@ package com.alura.forumhub.dto;
 import com.alura.forumhub.entity.StatusTopico;
 import com.alura.forumhub.entity.Topico;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 
 public record DadosCadastradosTopico(
@@ -22,7 +24,7 @@ public record DadosCadastradosTopico(
                 topico.getAutor(),
                 topico.getCurso(),
                 topico.getStatus(),
-                topico.getDataCriacao().toString()
+                topico.getDataCriacao().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"))
         );
     }
 }
