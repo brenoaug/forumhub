@@ -1,6 +1,6 @@
 package com.alura.forumhub.controller;
 
-import com.alura.forumhub.dto.DadosCadastramentoTopico;
+import com.alura.forumhub.dto.DadosCadastradosTopico;
 import com.alura.forumhub.dto.DadosCriacaoTopico;
 import com.alura.forumhub.entity.Topico;
 import com.alura.forumhub.repository.TopicoRepository;
@@ -24,13 +24,17 @@ public class TopicoController {
     }
 
     @PostMapping("/criar-topico")
-    public ResponseEntity<DadosCadastramentoTopico> criarTopico(@RequestBody @Valid DadosCriacaoTopico dadosCriacaoTopico,
-                                                                UriComponentsBuilder uriComponentsBuilder) {
+    public ResponseEntity<Object> criarTopico(@RequestBody @Valid DadosCriacaoTopico dadosCriacaoTopico,
+                                                              UriComponentsBuilder uriComponentsBuilder) {
+        if (repository.existsByTitulo(dadosCriacaoTopico.titulo())||repository.existsByMensagem(dadosCriacaoTopico.mensagem())) {
+            return ResponseEntity.badRequest().body("Já existe um tópico com esse título e/ou mensagem.");
+        }
+
         var topico = new Topico(dadosCriacaoTopico);
         repository.save(topico);
 
         var uri = uriComponentsBuilder.path("/topicos/{id}").buildAndExpand(topico.getId()).toUri();
 
-        return ResponseEntity.created(uri).body(new DadosCadastramentoTopico(topico));
+        return ResponseEntity.created(uri).body(new DadosCadastradosTopico(topico));
     }
 }

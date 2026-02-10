@@ -5,7 +5,7 @@ import com.alura.forumhub.entity.Topico;
 
 import java.util.UUID;
 
-public record DadosCadastramentoTopico(
+public record DadosCadastradosTopico(
         UUID id,
         String titulo,
         String mensagem,
@@ -14,7 +14,7 @@ public record DadosCadastramentoTopico(
         StatusTopico status,
         String dataCriacao
 ) {
-    public DadosCadastramentoTopico(Topico topico) {
+    public DadosCadastradosTopico(Topico topico) {
         this(
                 topico.getId(),
                 topico.getTitulo(),
