@@ -48,11 +48,24 @@ public class TopicoController {
         return ResponseEntity.ok().body(topicos.map(DadosCadastradosTopico::new));
     }
 
-    @GetMapping("/pesquisa")
-    public ResponseEntity<Page<DadosCadastradosTopico>> listarTopicosPorCurso(@RequestParam String curso, @PageableDefault(sort = {"dataCriacao"}) Pageable pageable) {
-        var parametroPesquisa = curso.replace('-', ' ').trim();
+//    @GetMapping("/busca")
+//    public ResponseEntity<Page<DadosCadastradosTopico>> listarTopicosPorCurso(@RequestParam String curso, @PageableDefault(sort = {"dataCriacao"}) Pageable pageable) {
+//        var parametroPesquisa = curso.replace('-', ' ').trim();
+//
+//        var topicos = repository.findByCursoContainingIgnoreCase(parametroPesquisa, pageable);
+//
+//        if (topicos.isEmpty()) {
+//            return ResponseEntity.notFound().build();
+//        }
+//
+//        return ResponseEntity.ok().body(topicos.map(DadosCadastradosTopico::new));
+//    }
 
-        var topicos = repository.findByCursoContainingIgnoreCase(parametroPesquisa, pageable);
+    @GetMapping("/busca")
+    public ResponseEntity<Object> listarTopicosPorCursoEDataCriacao(@RequestParam String curso, @RequestParam int ano, @PageableDefault(sort = {"dataCriacao"}) Pageable pageable) {
+        var cursoPesquisa = curso.replace('-', ' ').trim();
+
+        var topicos = repository.findByCursoContainingIgnoreCaseAndDataCriacaoYear(cursoPesquisa, ano, pageable);
 
         if (topicos.isEmpty()) {
             return ResponseEntity.notFound().build();
