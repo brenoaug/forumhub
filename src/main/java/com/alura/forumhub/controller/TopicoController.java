@@ -47,4 +47,17 @@ public class TopicoController {
 
         return ResponseEntity.ok().body(topicos.map(DadosCadastradosTopico::new));
     }
+
+    @GetMapping("/pesquisa")
+    public ResponseEntity<Page<DadosCadastradosTopico>> listarTopicosPorCurso(@RequestParam String curso, @PageableDefault(sort = {"dataCriacao"}) Pageable pageable) {
+        var parametroPesquisa = curso.replace('-', ' ').trim();
+
+        var topicos = repository.findByCursoContainingIgnoreCase(parametroPesquisa, pageable);
+
+        if (topicos.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok().body(topicos.map(DadosCadastradosTopico::new));
+    }
 }
