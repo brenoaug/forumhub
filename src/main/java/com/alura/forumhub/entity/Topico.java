@@ -1,7 +1,9 @@
 package com.alura.forumhub.entity;
 
+import com.alura.forumhub.dto.DadosAtualizacaoTopico;
 import com.alura.forumhub.dto.DadosCriacaoTopico;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -69,5 +71,21 @@ public class Topico {
 
     public String getCurso() {
         return curso;
+    }
+
+    public @NotBlank String setTitulo(@NotBlank String titulo) {
+        return this.titulo = titulo;
+    }
+    public @NotBlank String setMensagem(@NotBlank String mensagem) {
+        return this.mensagem = mensagem;
+    }
+
+    public void atualizarInformacoes(DadosAtualizacaoTopico dadosAtualizados) {
+        if (dadosAtualizados.titulo() != null && !dadosAtualizados.titulo().isBlank()) {
+            setTitulo(dadosAtualizados.titulo());
+        }
+        if (dadosAtualizados.mensagem() != null && !dadosAtualizados.mensagem().isBlank()) {
+            setMensagem(dadosAtualizados.mensagem());
+        }
     }
 }

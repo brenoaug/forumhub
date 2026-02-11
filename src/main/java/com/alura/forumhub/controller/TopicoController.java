@@ -1,10 +1,12 @@
 package com.alura.forumhub.controller;
 
+import com.alura.forumhub.dto.DadosAtualizacaoTopico;
 import com.alura.forumhub.dto.DadosCadastradosTopicos;
 import com.alura.forumhub.dto.DadosCriacaoTopico;
 import com.alura.forumhub.dto.DadosDetalhamentoTopico;
 import com.alura.forumhub.entity.Topico;
 import com.alura.forumhub.repository.TopicoRepository;
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -79,6 +81,46 @@ public class TopicoController {
         return topico.isEmpty() ?
                 ResponseEntity.notFound().build() :
                 ResponseEntity.ok().body(topico.map(DadosDetalhamentoTopico::new));
+    }
+
+    @PutMapping("/{id}")
+    @Transactional
+    public ResponseEntity<Object> atualizarTopico(@PathVariable UUID id, @RequestBody @Valid DadosAtualizacaoTopico dadosAtualizacaoTopico) {
+        var topicoVerificar = repository.findById(id);
+
+        if (topicoVerificar.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        if (dadosAtualizacaoTopico.titulo().isBlank() || dadosAtualizacaoTopico.mensagem().isBlank()) {
+            return ResponseEntity.badRequest().body(Map.of("mensagem", "O título e a mensagem não podem ser vazios."));
+        }
+
+        if (repository.existsByTitulo(dadosAtualizacaoTopico.titulo()) || repository.existsByMensagem(dadosAtualizacaoTopico.mensagem())) {
+            return ResponseEntity.badRequest().body(Map.of("mensagem", "Já existe um tópico com esse título e/ou mensagem."));
+        }
+
+        var topico = topicoVerificar.get();
+        topico.atualizarInformacoes(dadosAtualizacaoTopico);
+        repository.save(topico);
+
+        return ResponseEntity.ok().body(new DadosDetalhamentoTopico(topico));
+    }
+
+    @DeleteMapping("/{id}")
+    @Transactional
+    public ResponseEntity<Object> deletarTopico(@PathVariable UUID id) {
+        var topico = repository.findById(id);
+
+        var topicoVerificar = topico.isPresent();
+
+        if (!topicoVerificar) {
+            return ResponseEntity.notFound().build();
+        }
+
+        repository.delete(topico.get());
+
+        return ResponseEntity.noContent().build();
     }
 }
 

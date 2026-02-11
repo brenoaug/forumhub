@@ -13,4 +13,5 @@ public record DadosCriacaoTopico(
         @NotBlank
         String curso
 ) {
+
 }
