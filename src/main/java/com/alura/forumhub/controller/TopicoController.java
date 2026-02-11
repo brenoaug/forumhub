@@ -30,7 +30,7 @@ public class TopicoController {
     @PostMapping("/criar-topico")
     public ResponseEntity<Object> criarTopico(@RequestBody @Valid DadosCriacaoTopico dadosCriacaoTopico, UriComponentsBuilder uriComponentsBuilder) {
         if (repository.existsByTitulo(dadosCriacaoTopico.titulo()) || repository.existsByMensagem(dadosCriacaoTopico.mensagem())) {
-            return ResponseEntity.badRequest().body(Map.of("mensagem","Já existe um tópico com esse título e/ou mensagem."));
+            return ResponseEntity.badRequest().body(Map.of("mensagem", "Já existe um tópico com esse título e/ou mensagem."));
         }
 
         var topico = new Topico(dadosCriacaoTopico);
@@ -48,29 +48,24 @@ public class TopicoController {
         return ResponseEntity.ok().body(topicos.map(DadosCadastradosTopico::new));
     }
 
-//    @GetMapping("/busca")
-//    public ResponseEntity<Page<DadosCadastradosTopico>> listarTopicosPorCurso(@RequestParam String curso, @PageableDefault(sort = {"dataCriacao"}) Pageable pageable) {
-//        var parametroPesquisa = curso.replace('-', ' ').trim();
-//
-//        var topicos = repository.findByCursoContainingIgnoreCase(parametroPesquisa, pageable);
-//
-//        if (topicos.isEmpty()) {
-//            return ResponseEntity.notFound().build();
-//        }
-//
-//        return ResponseEntity.ok().body(topicos.map(DadosCadastradosTopico::new));
-//    }
-
     @GetMapping("/busca")
-    public ResponseEntity<Object> listarTopicosPorCursoEDataCriacao(@RequestParam String curso, @RequestParam int ano, @PageableDefault(sort = {"dataCriacao"}) Pageable pageable) {
-        var cursoPesquisa = curso.replace('-', ' ').trim();
+    public ResponseEntity<Object> listarTopicosPorCursoOuAno(@RequestParam(required = false) String curso, @RequestParam(required = false) Integer ano, @PageableDefault(sort = {"dataCriacao"}) Pageable pageable) {
 
-        var topicos = repository.findByCursoContainingIgnoreCaseAndDataCriacaoYear(cursoPesquisa, ano, pageable);
+        Page<Topico> topicos;
+        var parametroPesquisaCurso = curso == null ? "" : curso.replace('-', ' ').trim();
 
-        if (topicos.isEmpty()) {
-            return ResponseEntity.notFound().build();
+        if (!parametroPesquisaCurso.isBlank() && ano != null) {
+            topicos = repository.findByCursoContainingIgnoreCaseAndDataCriacaoYear(parametroPesquisaCurso, ano, pageable);
+        } else if (!parametroPesquisaCurso.isBlank()) {
+            topicos = repository.findByCursoContainingIgnoreCase(parametroPesquisaCurso, pageable);
+        } else if (ano != null) {
+            topicos = repository.findByDataCriacaoYear(ano, pageable);
+        } else {
+            return ResponseEntity.badRequest().body(Map.of("mensagem", "Pelo menos um parâmetro de busca deve ser fornecido."));
         }
 
-        return ResponseEntity.ok().body(topicos.map(DadosCadastradosTopico::new));
+        return topicos.isEmpty() ?
+                ResponseEntity.badRequest().body(Map.of("mensagem", "Nenhum tópico encontrado para os parâmetros fornecidos.")) :
+                ResponseEntity.ok().body(topicos.map(DadosCadastradosTopico::new));
     }
 }
