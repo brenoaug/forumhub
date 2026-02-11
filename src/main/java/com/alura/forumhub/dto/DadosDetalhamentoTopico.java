@@ -3,11 +3,10 @@ package com.alura.forumhub.dto;
 import com.alura.forumhub.entity.StatusTopico;
 import com.alura.forumhub.entity.Topico;
 
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 
-public record DadosCadastradosTopico(
+public record DadosDetalhamentoTopico(
         UUID id,
         String titulo,
         String mensagem,
@@ -16,7 +15,7 @@ public record DadosCadastradosTopico(
         StatusTopico status,
         String dataCriacao
 ) {
-    public DadosCadastradosTopico(Topico topico) {
+    public DadosDetalhamentoTopico(Topico topico) {
         this(
                 topico.getId(),
                 topico.getTitulo(),

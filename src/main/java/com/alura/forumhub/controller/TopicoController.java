@@ -1,7 +1,8 @@
 package com.alura.forumhub.controller;
 
-import com.alura.forumhub.dto.DadosCadastradosTopico;
+import com.alura.forumhub.dto.DadosCadastradosTopicos;
 import com.alura.forumhub.dto.DadosCriacaoTopico;
+import com.alura.forumhub.dto.DadosDetalhamentoTopico;
 import com.alura.forumhub.entity.Topico;
 import com.alura.forumhub.repository.TopicoRepository;
 import jakarta.validation.Valid;
@@ -14,6 +15,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
 
 
 @RestController
@@ -38,14 +41,14 @@ public class TopicoController {
 
         var uri = uriComponentsBuilder.path("/topicos/{id}").buildAndExpand(topico.getId()).toUri();
 
-        return ResponseEntity.created(uri).body(new DadosCadastradosTopico(topico));
+        return ResponseEntity.created(uri).body(new DadosDetalhamentoTopico(topico));
     }
 
     @GetMapping
-    public ResponseEntity<Page<DadosCadastradosTopico>> listarTopicos(@PageableDefault(sort = {"dataCriacao"}) Pageable pageable) {
+    public ResponseEntity<Page<DadosCadastradosTopicos>> listarTopicos(@PageableDefault(sort = {"dataCriacao"}) Pageable pageable) {
         var topicos = repository.findAll(pageable);
 
-        return ResponseEntity.ok().body(topicos.map(DadosCadastradosTopico::new));
+        return ResponseEntity.ok().body(topicos.map(DadosCadastradosTopicos::new));
     }
 
     @GetMapping("/busca")
@@ -65,7 +68,17 @@ public class TopicoController {
         }
 
         return topicos.isEmpty() ?
-                ResponseEntity.badRequest().body(Map.of("mensagem", "Nenhum tópico encontrado para os parâmetros fornecidos.")) :
-                ResponseEntity.ok().body(topicos.map(DadosCadastradosTopico::new));
+                ResponseEntity.notFound().build() :
+                ResponseEntity.ok().body(topicos.map(DadosCadastradosTopicos::new));
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Optional<DadosDetalhamentoTopico>> detalharTopico(@PathVariable UUID id) {
+        var topico = repository.findById(id);
+
+        return topico.isEmpty() ?
+                ResponseEntity.notFound().build() :
+                ResponseEntity.ok().body(topico.map(DadosDetalhamentoTopico::new));
     }
 }
+
