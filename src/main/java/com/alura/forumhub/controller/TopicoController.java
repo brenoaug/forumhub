@@ -110,16 +110,12 @@ public class TopicoController {
     @DeleteMapping("/{id}")
     @Transactional
     public ResponseEntity<Object> deletarTopico(@PathVariable UUID id) {
-        var topico = repository.findById(id);
-
-        var topicoVerificar = topico.isPresent();
-
-        if (!topicoVerificar) {
+        var topico = repository.findById(id).isPresent();
+        if (!topico) {
             return ResponseEntity.notFound().build();
         }
 
-        repository.delete(topico.get());
-
+        repository.deleteById(id);
         return ResponseEntity.noContent().build();
     }
 }
