@@ -1,4 +1,4 @@
-package com.alura.forumhub.service;
+package com.alura.forumhub.infrastructure.service;
 
 import com.alura.forumhub.repository.UsuarioRepository;
 import org.jetbrains.annotations.NotNull;

@@ -31,6 +31,14 @@ public class Usuario implements UserDetails {
         return List.of(new SimpleGrantedAuthority("ROLE_USER"));
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public String getSenha() {
+        return senha;
+    }
+
     @Override
     public @Nullable String getPassword() {
         return senha;
