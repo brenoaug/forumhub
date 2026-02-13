@@ -62,12 +62,6 @@ public class SpringDocConfig {
                                 - Atualizar informações de tópicos
                                 - Deletar tópicos
                                 
-                                ## Regras de Negócio
-                                
-                                - Títulos e mensagens devem ser únicos no sistema
-                                - Todos os endpoints (exceto `/login`) requerem autenticação
-                                - Tópicos são criados com status "NÃO_RESPONDIDO" por padrão
-                                - A busca por curso é case-insensitive e aceita correspondência parcial
                                 
                                 ##️ Tecnologias
                                 
