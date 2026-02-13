@@ -1,6 +1,7 @@
 package com.alura.forumhub.infrastructure.config;
 
 import com.alura.forumhub.infrastructure.component.SecurityFilter;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -17,6 +18,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
+@SecurityRequirement(name = "bearer-key")
 public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity, SecurityFilter securityFilter) {
@@ -24,6 +26,13 @@ public class SecurityConfig {
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(req -> {
                             req.requestMatchers(HttpMethod.POST, "/login").permitAll();
+                            req.requestMatchers(
+                                    "/v3/api-docs/**",
+                                    "/swagger-ui/**",
+                                    "/swagger-ui.html",
+                                    "/swagger-resources/**",
+                                    "/webjars/**"
+                            ).permitAll();
                             req.anyRequest().authenticated();
                         })
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)

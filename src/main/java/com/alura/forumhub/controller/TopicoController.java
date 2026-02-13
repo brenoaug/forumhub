@@ -6,6 +6,7 @@ import com.alura.forumhub.dto.DadosCriacaoTopico;
 import com.alura.forumhub.dto.DadosDetalhamentoTopico;
 import com.alura.forumhub.entity.Topico;
 import com.alura.forumhub.repository.TopicoRepository;
+import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
@@ -47,14 +48,18 @@ public class TopicoController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<DadosCadastradosTopicos>> listarTopicos(@PageableDefault(sort = {"dataCriacao"}) Pageable pageable) {
+    public ResponseEntity<Page<DadosCadastradosTopicos>> listarTopicos(
+            @Parameter(hidden = true) @PageableDefault(sort = {"dataCriacao"}) Pageable pageable) {
         var topicos = repository.findAll(pageable);
 
         return ResponseEntity.ok().body(topicos.map(DadosCadastradosTopicos::new));
     }
 
     @GetMapping("/busca")
-    public ResponseEntity<Object> listarTopicosPorCursoOuAno(@RequestParam(required = false) String curso, @RequestParam(required = false) Integer ano, @PageableDefault(sort = {"dataCriacao"}) Pageable pageable) {
+    public ResponseEntity<Object> listarTopicosPorCursoOuAno(
+            @RequestParam(required = false) String curso,
+            @RequestParam(required = false) Integer ano,
+            @Parameter(hidden = true) @PageableDefault(sort = {"dataCriacao"}) Pageable pageable) {
 
         Page<Topico> topicos;
         var parametroPesquisaCurso = curso == null ? "" : curso.replace('-', ' ').trim();
